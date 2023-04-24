@@ -1,10 +1,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-sf::Vector2f lerp(sf::Vector2f p0, sf::Vector2f p1) {
-    // Explique moi la ligne du dessous
-    sf::Vector2f pointCoordinate( (p0.x + p1.x) / 2, (p0.y + p1.y) / 2);
-    return pointCoordinate;
+sf::Vector2f lerp(sf::Vector2f p0, sf::Vector2f p1, float t = 0.5f) {
+    return {p0.x + (p1.x - p0.x) * t, p0.y + (p1.y - p0.y) * t};
 }
 
 int main() {
@@ -49,10 +47,13 @@ int main() {
         window.draw(axisX);
         window.draw(axisY);
 
-        sf::Vector2f lerp0_1 = lerp(p0, p1);
-        sf::Vector2f lerp1_2 = lerp(p1, p2);
+        float time = clock.getElapsedTime().asSeconds();
+        float sinValue = (sin(time) + 1) / 2;
 
-        sf::Vector2f lerpFinal = lerp(lerp0_1, lerp1_2);
+        sf::Vector2f lerp0_1 = lerp(p0, p1, sinValue);
+        sf::Vector2f lerp1_2 = lerp(p1, p2, sinValue);
+
+        sf::Vector2f lerpFinal = lerp(lerp0_1, lerp1_2, sinValue);
 
         sf::CircleShape point0(5);
         point0.setFillColor(sf::Color::Red);
@@ -88,11 +89,6 @@ int main() {
 
         window.display();
 
-        float time = clock.getElapsedTime().asSeconds();
-        float sinValue = sin(time * 5) * 7;
-        p0.y = p0.y + sinValue;
-        p1.y = p1.y - sinValue * 1.5f;
-        p2.y = p2.y + cos(time * 10 + 4) * 9;
     }
     return 0;
 }
